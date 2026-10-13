@@ -23,6 +23,39 @@
 @keyframes scw-nav-underline{0%{transform:scaleX(0);opacity:0}35%{opacity:1}100%{transform:scaleX(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.links a.scw-nav-swipe-active::before,.links a.scw-nav-swipe-active::after{animation:none}.links a.scw-nav-swipe-active::after{transform:scaleX(1);opacity:1}}
 
+
+/* Glinting in-site blockchain explorer */
+.scw-explorer-launch{position:relative;isolation:isolate;white-space:nowrap;overflow:hidden;background:linear-gradient(115deg,#d8ffe8,#83e9b0 45%,#e8fff1);border-color:#b4ffd0;box-shadow:0 0 0 1px rgba(168,240,198,.18),0 0 18px rgba(106,220,162,.2);animation:scw-explorer-glow 2.8s ease-in-out infinite}
+.scw-explorer-launch:after{content:"";position:absolute;top:-40%;bottom:-40%;left:-70%;width:40%;transform:skewX(-24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);animation:scw-explorer-glint 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes scw-explorer-glint{0%,48%{left:-70%}76%,100%{left:145%}}
+@keyframes scw-explorer-glow{0%,100%{box-shadow:0 0 0 1px rgba(168,240,198,.16),0 0 12px rgba(106,220,162,.18)}50%{box-shadow:0 0 0 1px rgba(168,240,198,.4),0 0 24px rgba(106,220,162,.4)}}
+.scw-explorer-overlay{position:fixed;inset:0;z-index:10020;background:rgba(2,7,5,.82);backdrop-filter:blur(12px);display:none;align-items:flex-start;justify-content:center;padding:5vh 16px 24px;overflow:auto}
+.scw-explorer-overlay.is-open{display:flex}
+.scw-explorer-panel{width:min(900px,100%);border:1px solid #47785d;border-radius:18px;background:linear-gradient(155deg,#14211a,#09100d);box-shadow:0 24px 90px rgba(0,0,0,.6),0 0 35px rgba(106,220,162,.12);padding:clamp(18px,3vw,30px);position:relative}
+.scw-explorer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.scw-explorer-head h2{font-size:clamp(24px,4vw,38px);line-height:1.1;margin:6px 0 10px;letter-spacing:-.04em}
+.scw-explorer-kicker{color:var(--mint);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+.scw-explorer-close{border:1px solid #456454;background:#102017;color:#eafff0;border-radius:9px;padding:8px 12px;cursor:pointer}
+.scw-explorer-form{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:20px}
+.scw-explorer-form label{display:grid;gap:6px;color:#c6d9cd;font-size:12px;font-weight:700}
+.scw-explorer-form select,.scw-explorer-form input{width:100%;min-width:0;padding:12px;border-radius:8px;border:1px solid #355343;background:#07100b;color:#f4fff7;outline:none}
+.scw-explorer-form select:focus,.scw-explorer-form input:focus{border-color:var(--mint);box-shadow:0 0 0 3px rgba(168,240,198,.1)}
+.scw-explorer-query{grid-column:1/-1}
+.scw-explorer-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.scw-explorer-hint{color:#91a99a;font-size:12px;margin:10px 0 0}
+.scw-explorer-results{margin-top:18px;border:1px solid #2d4a38;background:rgba(5,13,8,.72);border-radius:12px;padding:16px;min-height:90px;overflow-wrap:anywhere}
+.scw-explorer-results h3{margin:0 0 12px;color:var(--mint);font-size:17px}
+.scw-explorer-results p{margin:7px 0;color:#d4e4d9;font-size:13px}
+.scw-explorer-results .scw-explorer-muted{color:#91a99a}
+.scw-explorer-results a{color:var(--mint);text-decoration:underline;overflow-wrap:anywhere}
+.scw-explorer-items{display:grid;gap:9px;margin-top:12px}
+.scw-explorer-item{border:1px solid #263c2e;border-radius:8px;padding:10px;background:#0c1710}
+.scw-explorer-item strong{color:#dfffea}
+.scw-explorer-error{color:#ffd9a5!important}
+@media(max-width:850px){.navin{gap:12px}.links{gap:12px}.scw-explorer-launch{padding:10px 12px;font-size:12px}}
+@media(max-width:600px){.navin{height:auto;min-height:68px;flex-wrap:wrap;padding:10px 0}.navin>.scw-explorer-launch{margin-left:auto}.navin>.btn:not(.scw-explorer-launch){display:none}.scw-explorer-form{grid-template-columns:1fr}.scw-explorer-query,.scw-explorer-actions{grid-column:auto}.scw-explorer-overlay{padding:12px 8px}.scw-explorer-panel{padding:16px}}
+@media(prefers-reduced-motion:reduce){.scw-explorer-launch,.scw-explorer-launch:after{animation:none}}
+
 </style>
 <link rel="stylesheet" href="assets/background.css">
 <link rel="stylesheet" href="assets/support-widget.css">
@@ -39,6 +72,7 @@
 <header class="nav"><div class="wrap navin">
 <a class="brand" href="#home" aria-label="Solace Cyber Workstations home"><span class="mark">⌘</span><span>SOLACE CYBER<small>WORKSTATIONS</small></span></a>
 <nav class="links" aria-label="Main navigation"><a href="#services">Services</a><a href="#process">How it works</a><a href="#security-check">Security check</a><a href="#about">About</a><a href="blog.html">Blog</a><a href="#faq">FAQs</a></nav>
+<button class="btn scw-explorer-launch" id="scw-explorer-open" type="button" aria-haspopup="dialog" aria-controls="scw-chain-explorer">✦ Chain Search</button>
 <a class="btn" href="#assessment">Request an assessment <span>↗</span></a>
 </div></header>
 <main>
@@ -123,6 +157,20 @@
 <button class="btn" type="submit">Prepare email inquiry →</button><div class="form-status" id="formStatus" role="status"></div>
 </form>
 </div></section>
+
+<div class="scw-explorer-overlay" id="scw-chain-explorer" role="dialog" aria-modal="true" aria-labelledby="scw-explorer-title">
+ <div class="scw-explorer-panel">
+  <div class="scw-explorer-head"><div><div class="scw-explorer-kicker">Solace Cyber Workstations · On-page explorer</div><h2 id="scw-explorer-title">Search the blockchain.</h2><p class="scw-explorer-hint">Look up public wallet activity, transactions, blocks, and prediction markets here without navigating away from Solace.</p></div><button class="scw-explorer-close" id="scw-explorer-close" type="button" aria-label="Close search">✕ Close</button></div>
+  <form id="scw-explorer-form" class="scw-explorer-form">
+   <label>Search category<select id="scw-explorer-kind"><option value="address">Wallet / address history</option><option value="transaction">Transaction</option><option value="block">Block</option><option value="markets">Prediction markets</option></select></label>
+   <label id="scw-explorer-chain-wrap">Blockchain<select id="scw-explorer-chain"><option value="bitcoin">Bitcoin (BTC)</option><option value="ethereum">Ethereum (ETH)</option></select></label>
+   <label class="scw-explorer-query" id="scw-explorer-query-wrap">Wallet address, transaction ID, block height or hash<input id="scw-explorer-query" name="query" maxlength="180" autocomplete="off" spellcheck="false" placeholder="Paste a public address, tx hash, or block number" required></label>
+   <div class="scw-explorer-actions"><button class="btn" id="scw-explorer-submit" type="submit">Search public data →</button><button class="btn ghost" id="scw-explorer-clear" type="button">Clear</button></div>
+  </form>
+  <p class="scw-explorer-hint">Public blockchain data only. This tool never asks for seed phrases, private keys, passwords, or wallet connections. Results depend on public data providers being available.</p>
+  <div class="scw-explorer-results" id="scw-explorer-results" role="status" aria-live="polite"><h3>Ready to search</h3><p>Choose a search type and enter a public identifier. Wallet history is read-only; no transaction can be sent from this tool.</p></div>
+ </div>
+</div>
 </main>
 <footer class="footer"><div class="wrap footerin"><a class="brand" href="#home"><span class="mark">⌘</span><span>SOLACE CYBER<small>WORKSTATIONS</small></span></a><div>© <span id="year"></span> Solace Cyber Workstations. All rights reserved.</div><div class="footlinks"><a href="#services">Services</a><a href="blog.html">Blog</a><a href="#faq">FAQs</a><a href="#assessment">Contact</a></div></div></footer>
 <script>
@@ -179,6 +227,43 @@ links.forEach(link=>link.addEventListener('click',()=>{
  link.classList.add('scw-nav-swipe-active');
  window.setTimeout(()=>link.classList.remove('scw-nav-swipe-active'),1050);
 }));
+})();
+</script>
+
+<script id="scw-explorer-script">
+(()=>{'use strict';
+const overlay=document.getElementById('scw-chain-explorer'),openBtn=document.getElementById('scw-explorer-open'),closeBtn=document.getElementById('scw-explorer-close'),form=document.getElementById('scw-explorer-form'),kind=document.getElementById('scw-explorer-kind'),chain=document.getElementById('scw-explorer-chain'),query=document.getElementById('scw-explorer-query'),results=document.getElementById('scw-explorer-results'),chainWrap=document.getElementById('scw-explorer-chain-wrap'),queryWrap=document.getElementById('scw-explorer-query-wrap'),submit=document.getElementById('scw-explorer-submit');
+let lastFocus=null,controller=null;
+function show(){lastFocus=document.activeElement;overlay.classList.add('is-open');document.body.style.overflow='hidden';setTimeout(()=>kind.focus(),20)}
+function hide(){overlay.classList.remove('is-open');document.body.style.overflow='';if(controller)controller.abort();if(lastFocus)lastFocus.focus()}
+openBtn.addEventListener('click',show);closeBtn.addEventListener('click',hide);overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('is-open'))hide()});
+function updateFields(){const markets=kind.value==='markets';chainWrap.style.display=markets?'none':'grid';queryWrap.style.display=markets?'none':'grid';query.required=!markets;query.placeholder=kind.value==='address'?'Paste a public wallet address':kind.value==='transaction'?'Paste a transaction ID / hash':'Enter a block height or hash';submit.textContent=markets?'Load prediction markets →':'Search public data →'}
+kind.addEventListener('change',updateFields);
+function node(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=String(text);if(className)el.className=className;return el}
+function reset(title,description){results.replaceChildren();results.append(node('h3',title));if(description)results.append(node('p',description))}
+function line(label,value){if(value===undefined||value===null||value==='')return;const p=node('p');const b=node('strong',label+': ');p.append(b,document.createTextNode(String(value)));results.append(p)}
+function linkLine(label,url){if(!url)return;const p=node('p');p.append(node('strong',label+': '));const a=node('a',url);a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open source data endpoint';p.append(a);results.append(p)}
+function short(v,n=22){v=String(v??'');return v.length>n?v.slice(0,10)+'…'+v.slice(-8):v}
+function fmtNum(v){if(v===undefined||v===null||v==='')return '—';const n=Number(v);return Number.isFinite(n)?n.toLocaleString():String(v)}
+function date(v){if(!v)return '—';const d=typeof v==='number'?new Date(v*1000):new Date(v);return Number.isNaN(d.getTime())?String(v):d.toLocaleString()}
+function item(title,rows){const box=node('div',undefined,'scw-explorer-item');box.append(node('strong',title));rows.forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!==''){const p=node('p');p.append(node('strong',k+': '),document.createTextNode(String(v)));box.append(p)}});results.append(box)}
+async function get(url,signal){const r=await fetch(url,{signal,headers:{Accept:'application/json'}});if(!r.ok)throw new Error('Data provider returned HTTP '+r.status+'. It may be rate-limited or temporarily unavailable.');return r.json()}
+async function searchBitcoin(type,q,signal){
+ const base='https://blockstream.info/api';
+ if(type==='address'){const [info,txs]=await Promise.all([get(base+'/address/'+encodeURIComponent(q),signal),get(base+'/address/'+encodeURIComponent(q)+'/txs',signal)]);reset('Bitcoin address history','Public activity for '+short(q,34));line('Address',q);const cs=info.chain_stats||{},ms=info.mempool_stats||{};line('Confirmed transactions',fmtNum(cs.tx_count));line('Confirmed received',((cs.funded_txo_sum||0)/1e8).toFixed(8)+' BTC');line('Confirmed sent',((cs.spent_txo_sum||0)/1e8).toFixed(8)+' BTC');line('Confirmed balance',(((cs.funded_txo_sum||0)-(cs.spent_txo_sum||0))/1e8).toFixed(8)+' BTC');line('Mempool transactions',fmtNum(ms.tx_count));results.append(node('h3','Recent transactions'));if(!txs.length)results.append(node('p','No transactions returned by the public provider.','scw-explorer-muted'));txs.slice(0,12).forEach(t=>item(short(t.txid,36),[['Status',t.status&&t.status.confirmed?'Confirmed':'Unconfirmed'],['Block time',t.status&&t.status.block_time?date(t.status.block_time):'—'],['Fee',fmtNum(t.fee)+' sats'],['Transaction ID',t.txid]]));}
+ else if(type==='transaction'){const t=await get(base+'/tx/'+encodeURIComponent(q),signal);reset('Bitcoin transaction','Transaction details from the public Blockstream API.');line('Transaction ID',t.txid);line('Status',t.status&&t.status.confirmed?'Confirmed':'Unconfirmed');line('Block height',t.status&&t.status.block_height);line('Time',t.status&&t.status.block_time?date(t.status.block_time):'—');line('Fee',fmtNum(t.fee)+' sats');line('Inputs',fmtNum((t.vin||[]).length));line('Outputs',fmtNum((t.vout||[]).length));(t.vout||[]).slice(0,8).forEach((o,i)=>item('Output '+(i+1),[['Address',o.scriptpubkey_address||'Not exposed'],['Value',(Number(o.value||0)/1e8).toFixed(8)+' BTC']]));}
+ else{let hash=q;if(/^\d+$/.test(q)){const r=await get(base+'/block-height/'+encodeURIComponent(q),signal);hash=typeof r==='string'?r:r.id||r.hash||q}const b=await get(base+'/block/'+encodeURIComponent(hash),signal);reset('Bitcoin block','Block details from the public Blockstream API.');line('Block hash',b.id||hash);line('Height',fmtNum(b.height));line('Timestamp',date(b.timestamp));line('Transactions',fmtNum(b.tx_count));line('Block size',fmtNum(b.size)+' bytes');line('Weight',fmtNum(b.weight));line('Previous block',b.previousblockhash);}
+}
+async function searchEthereum(type,q,signal){
+ const base='https://eth.blockscout.com/api/v2';
+ if(type==='address'){const [info,txdata]=await Promise.all([get(base+'/addresses/'+encodeURIComponent(q),signal),get(base+'/addresses/'+encodeURIComponent(q)+'/transactions?filter=to%20%7C%20from',signal)]);reset('Ethereum address history','Public activity for '+short(q,34));line('Address',info.hash||q);line('Name / label',info.name||'No public label');line('Balance',info.coin_balance!==undefined?(Number(info.coin_balance)/1e18).toFixed(8)+' ETH':'Not available');line('Transaction count',fmtNum(info.transactions_count));results.append(node('h3','Recent transactions'));const arr=txdata.items||[];if(!arr.length)results.append(node('p','No transactions returned by the public provider.','scw-explorer-muted'));arr.slice(0,12).forEach(t=>item(short(t.hash,36),[['Status',t.status],['Time',date(t.timestamp)],['From',t.from&&t.from.hash],['To',t.to&&t.to.hash],['Value',t.value!==undefined?(Number(t.value)/1e18).toFixed(8)+' ETH':'—']]));}
+ else if(type==='transaction'){const t=await get(base+'/transactions/'+encodeURIComponent(q),signal);reset('Ethereum transaction','Transaction details from Blockscout public API.');line('Transaction hash',t.hash);line('Status',t.status);line('Timestamp',date(t.timestamp));line('Block',fmtNum(t.block));line('From',t.from&&t.from.hash);line('To',t.to&&t.to.hash);line('Value',t.value!==undefined?(Number(t.value)/1e18).toFixed(8)+' ETH':'—');line('Gas used',fmtNum(t.gas_used));line('Fee',t.fee&&t.fee.value!==undefined?(Number(t.fee.value)/1e18).toFixed(8)+' ETH':'—');}
+ else{const b=await get(base+'/blocks/'+encodeURIComponent(q),signal);reset('Ethereum block','Block details from Blockscout public API.');line('Block number',fmtNum(b.height));line('Block hash',b.hash);line('Timestamp',date(b.timestamp));line('Transactions',fmtNum(b.tx_count));line('Gas used',fmtNum(b.gas_used));line('Miner / validator',b.miner&&b.miner.hash);line('Base fee per gas',b.base_fee_per_gas);}
+}
+async function searchMarkets(signal){const data=await get('https://gamma-api.polymarket.com/markets?limit=20&active=true&closed=false&order=volume24hr&ascending=false',signal);reset('Active prediction markets','Public market listings from Polymarket data. Prices are indicative and can change quickly.');const arr=Array.isArray(data)?data:(data.data||[]);if(!arr.length){results.append(node('p','No active markets returned right now.'));return}arr.slice(0,15).forEach(m=>{const outcomes=Array.isArray(m.outcomes)?m.outcomes:JSON.parse(m.outcomes||'[]');const prices=Array.isArray(m.outcomePrices)?m.outcomePrices:JSON.parse(m.outcomePrices||'[]');item(m.question||m.title||'Untitled market',[['Category',m.category],['Volume 24h',m.volume24hr||m.volumeNum||'—'],['Liquidity',m.liquidityNum||m.liquidity||'—'],['Outcomes',outcomes.map((o,i)=>o+': '+(prices[i]??'?')).join(' · ')],['Status',m.active?'Active':'Not active']])})}
+form.addEventListener('submit',async e=>{e.preventDefault();if(controller)controller.abort();controller=new AbortController();const signal=controller.signal;const type=kind.value,q=query.value.trim();if(type!=='markets'&&!q)return;submit.disabled=true;submit.textContent='Searching…';reset('Searching public data','Connecting to a public read-only data provider. This can take a few seconds.');try{if(type==='markets')await searchMarkets(signal);else if(chain.value==='bitcoin')await searchBitcoin(type,q,signal);else await searchEthereum(type,q,signal)}catch(err){if(err.name!=='AbortError'){reset('Search unavailable',err.message||'The public provider could not be reached. Try again later or check the identifier.');results.lastChild&&results.lastChild.classList.add('scw-explorer-error');const note=node('p','No wallet credentials are needed. Your search has not signed or sent any transaction.','scw-explorer-muted');results.append(note)}}finally{if(!signal.aborted){submit.disabled=false;submit.textContent=kind.value==='markets'?'Load prediction markets →':'Search public data →'}}});
+document.getElementById('scw-explorer-clear').addEventListener('click',()=>{query.value='';reset('Ready to search','Choose a search type and enter a public identifier.');query.focus()});
+updateFields();
 })();
 </script>
 </body>
