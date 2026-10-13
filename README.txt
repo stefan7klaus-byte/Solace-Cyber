@@ -14,8 +14,9 @@ NETLIFY HOSTING AND BACKEND
 ---------------------------
 The repository is configured for Netlify static hosting plus serverless functions.
 Connect this GitHub repository to Netlify and deploy from the repository root.
-No build command is required; publish directory is "." and functions are in
-"netlify/functions". The community API and support chatbot use Netlify Blobs for
+The configured build command is `npm run build`; it creates a clean `dist/`
+static publish directory while keeping function source outside the public output.
+Netlify deploys functions from `netlify/functions`. The community API and support chatbot use Netlify Blobs for
 persistent records and uploaded images.
 
 REQUIRED NETLIFY ENVIRONMENT VARIABLE
