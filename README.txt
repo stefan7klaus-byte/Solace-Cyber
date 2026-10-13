@@ -5,7 +5,7 @@ Files:
 - homepage-hero.png and blog-hero.png: user-provided hero images
 
 Keep all four files in the same folder when previewing or deploying.
-The homepage contact form opens a mail draft; it does not submit to a backend.
+The homepage contact form prepares an email draft and provides a manual email/copy fallback if no email app is configured. It does not submit to a server.\n\nThe community comments, posts, and reviews now fall back to browser-local storage when the old Netlify API is unavailable. In that mode, entries are only visible in the same browser and device; they are not shared publicly with other visitors. Shared, persistent submissions require a configured backend service.
 Blog topic links open an email draft. Replace sample topic cards with finished articles before launch.
 Review all business, privacy, service, and legal claims before publishing.
 
