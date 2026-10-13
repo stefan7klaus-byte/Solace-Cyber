@@ -42,9 +42,10 @@ export default async function handler(request){
       await leads.setJSON("lead:"+id,lead);
       draft.details={};draft.declined=[];
       let notified=false;
-      if(process.env.RESEND_API_KEY&&process.env.LEADS_NOTIFICATION_EMAIL&&process.env.LEADS_FROM_EMAIL){
+      const notificationEmail=process.env.LEADS_NOTIFICATION_EMAIL||"Solace.cyber.workstations@mail.com";
+      if(process.env.RESEND_API_KEY&&notificationEmail&&process.env.LEADS_FROM_EMAIL){
         try{
-          const mail=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.LEADS_FROM_EMAIL,to:[process.env.LEADS_NOTIFICATION_EMAIL],subject:lead.intent==="quote"?"New Solace Cyber Workstations quote request":"New Solace Cyber Workstations support lead",text:"A visitor consented to a "+lead.intent+" follow-up.\n\nName: "+(lead.details.name||"Skipped")+"\nEmail: "+(lead.details.email||"Skipped")+"\nPhone: "+(lead.details.phone||"Skipped")+"\nCompany: "+(lead.details.company||"Skipped")+"\n\nReview scope and authorization before offering work. Do not promise recovery outcomes."})});
+          const mail=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.LEADS_FROM_EMAIL,to:[notificationEmail],subject:lead.intent==="quote"?"New Solace Cyber Workstations quote request":"New Solace Cyber Workstations support lead",text:"A visitor consented to a "+lead.intent+" follow-up.\n\nName: "+(lead.details.name||"Skipped")+"\nEmail: "+(lead.details.email||"Skipped")+"\nPhone: "+(lead.details.phone||"Skipped")+"\nCompany: "+(lead.details.company||"Skipped")+"\n\nReview scope and authorization before offering work. Do not promise recovery outcomes."})});
           notified=mail.ok;
         }catch(error){console.error("Lead notification failed",error)}
       }
