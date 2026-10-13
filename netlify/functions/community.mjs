@@ -1,5 +1,5 @@
 import { getStore } from "@netlify/blobs";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 const store = getStore("scw-community");
 const json = (body, status=200, extra={}) => Response.json(body,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff",...extra}});
@@ -7,7 +7,7 @@ const clean = (v,max=2500) => String(v??"").replace(/[\u0000-\u0008\u000B\u000C\
 async function readEntries(){try{const v=await store.get("entries.json",{type:"json"});return Array.isArray(v)?v:[]}catch{return []}}
 async function saveEntries(items){await store.setJSON("entries.json",items)}
 function publicEntry(x){const {id,type,name,title,text,article,rating,createdAt,imageId}=x;return{id,type,name,title,text,article,rating,createdAt,imageData:imageId?('/.netlify/functions/community?action=image&id='+encodeURIComponent(imageId)):null}}
-export default async function handler(request){
+export default async function handler(request, context){
  if(request.method==="OPTIONS")return new Response(null,{status:204});
  const url=new URL(request.url);
  try{
@@ -25,6 +25,17 @@ export default async function handler(request){
    return json({comments:all.filter(x=>x.type==="comment").map(publicEntry),posts:all.filter(x=>x.type==="post").map(publicEntry),reviews:all.filter(x=>x.type==="review").map(publicEntry)});
   }
   if(request.method!=="POST")return json({error:"Method not allowed"},405);
+  const ip=String(context?.ip||request.headers.get("x-nf-client-connection-ip")||"");
+  if(ip){
+   const rateStore=getStore("scw-community-rate");
+   const rateKey="ip:"+createHash("sha256").update(ip).digest("hex");
+   const now=Date.now();
+   const previous=await rateStore.get(rateKey,{type:"json"}).catch(()=>[]);
+   const recent=(Array.isArray(previous)?previous:[]).filter(t=>Number.isFinite(t)&&now-t<10*60*1000);
+   if(recent.length>=8)return json({error:"Too many submissions from this connection. Please wait a few minutes and try again."},429);
+   recent.push(now);
+   await rateStore.setJSON(rateKey,recent);
+  }
   const body=await request.json();
   const action=clean(body.action,20),name=clean(body.name,80),text=clean(body.text,action==="post"?5000:2500);
   if(name.length<1||text.length<2)return json({error:"Please provide your name and a message."},400);
