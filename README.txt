@@ -5,7 +5,7 @@ Files:
 - homepage-hero.png and blog-hero.png: user-provided hero images
 
 Keep all four files in the same folder when previewing or deploying.
-The homepage contact form prepares an email draft and provides a manual email/copy fallback if no email app is configured. It does not submit to a server.\n\nThe community comments, posts, and reviews now fall back to browser-local storage when the old Netlify API is unavailable. In that mode, entries are only visible in the same browser and device; they are not shared publicly with other visitors. Shared, persistent submissions require a configured backend service.
+The homepage contact form prepares an email draft and provides a manual email/copy fallback if no email app is configured. It does not submit to a server.\n\nCommunity comments, posts, and reviews support Supabase shared storage when configured in assets/community-config.js. Until Supabase is configured, entries fall back to browser-local storage and are visible only in the same browser/device. Run supabase-community.sql in the Supabase SQL Editor, then set the project URL and anon/publishable key in assets/community-config.js. New shared submissions are held as pending and must be approved in the Supabase Table Editor before they appear publicly. Never put a service_role key in client-side files.
 Blog topic links open an email draft. Replace sample topic cards with finished articles before launch.
 Review all business, privacy, service, and legal claims before publishing.
 
@@ -22,14 +22,10 @@ The former `netlify/functions/chat.mjs` AI chatbot endpoint has been removed. Ne
 may still be used separately for other existing backend features, but it is not required
 for the FAQ chat widget.
 
-The homepage contact form still prepares a mail draft in the visitor's email
-application. Community comments, visitor posts, post image uploads, and reviews
-are published publicly without a sign-in or moderation queue. Submissions currently publish immediately and cannot be removed through a
-visitor-facing moderation tool. Add a moderation and privacy/retention policy
-before promoting the community widely. Basic per-IP submission rate limiting is enabled. Do not publish sensitive data or recovery credentials.
+The homepage contact form prepares a mail draft in the visitor's email application. The community UI uses Supabase REST when configured, with row-level security and moderation: visitors can submit pending comments, posts, and reviews, but only approved entries are publicly readable. Review pending entries in the Supabase Table Editor and change status to approved or rejected. Do not publish sensitive data or recovery credentials.
 
-IMPORTANT HOSTING NOTE
-GitHub Pages cannot run the backend functions. The live production site must be
-deployed on Netlify for the API and persistent community features to work. The
-GitHub Pages URL will remain a static version unless you switch visitors to the
-Netlify URL or configure a custom domain for Netlify.
+STATIC HOSTING NOTE
+GitHub Pages cannot run server-side functions. The Supabase community feature works from GitHub Pages after the Supabase table, row-level security policies, project URL, and anon/publishable key are configured. The anon key is intended for public browser use only when RLS is correctly enabled; never expose a service_role key. The email contact form still relies on the visitor's mail app.
+
+CURSOR BUBBLE EFFECT
+assets/touch-bubbles.js and assets/touch-bubbles.css add lightweight floating bubbles around the pointer and on pointer interactions. The effect is decorative, does not intercept clicks, and respects reduced-motion preferences.
