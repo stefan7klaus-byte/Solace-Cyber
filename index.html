@@ -24,6 +24,19 @@
 @media(prefers-reduced-motion:reduce){.links a.scw-nav-swipe-active::before,.links a.scw-nav-swipe-active::after{animation:none}.links a.scw-nav-swipe-active::after{transform:scaleX(1);opacity:1}}
 
 
+/* scw-section-overlay-navigation-v1: open existing sections in a panel instead of scrolling */
+.scw-section-overlay{position:fixed;inset:0;z-index:10030;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:clamp(12px,4vh,42px) 14px 24px;background:rgba(2,8,5,.84);backdrop-filter:blur(12px)}
+.scw-section-overlay.is-open{display:flex;animation:scw-section-backdrop-in .2s ease both}
+.scw-section-dialog{width:min(1160px,100%);max-height:92vh;overflow:auto;position:relative;border:1px solid #426b53;border-radius:18px;background:#0b1110;box-shadow:0 22px 90px rgba(0,0,0,.62),0 0 32px rgba(106,220,162,.14);animation:scw-section-panel-in .28s cubic-bezier(.2,.8,.2,1) both}
+.scw-section-closebar{position:sticky;top:0;z-index:3;display:flex;justify-content:flex-end;padding:12px 14px;background:linear-gradient(180deg,rgba(11,17,16,.98),rgba(11,17,16,.88));border-bottom:1px solid rgba(106,220,162,.18)}
+.scw-section-close{border:1px solid #426b53;background:#14251b;color:#eafff0;border-radius:9px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.scw-section-close:hover{color:#fff;box-shadow:0 0 18px rgba(106,220,162,.35);border-color:var(--mint)}
+.scw-section-dialog>.section{border-top:0}
+@keyframes scw-section-backdrop-in{from{opacity:0}to{opacity:1}}
+@keyframes scw-section-panel-in{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.scw-section-overlay.is-open,.scw-section-dialog{animation:none}}
+
+
 /* scw-nav-hover-glow-shake-v1: hover/touch feedback for all six existing navigation links */
 .links a[href="#services"],
 .links a[href="#process"],
@@ -280,6 +293,42 @@ allNavLinks.forEach(link=>{
  link.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')activate()});
  link.addEventListener('touchstart',activate,{passive:true});
  link.addEventListener('focus',activate);
+});
+})();
+</script>
+
+<script id="scw-section-overlay-navigation">
+(()=>{'use strict';
+const targets=new Set(['services','process','security-check','about','faq']);
+let overlay=null,dialog=null,placeholder=null,activeSection=null,lastFocus=null;
+function ensurePanel(){
+ if(overlay)return;
+ overlay=document.createElement('div');overlay.className='scw-section-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Website section');
+ dialog=document.createElement('div');dialog.className='scw-section-dialog';
+ const bar=document.createElement('div');bar.className='scw-section-closebar';
+ const close=document.createElement('button');close.type='button';close.className='scw-section-close';close.textContent='✕ Close section';close.addEventListener('click',closePanel);
+ bar.appendChild(close);dialog.appendChild(bar);overlay.appendChild(dialog);document.body.appendChild(overlay);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)closePanel()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('is-open'))closePanel()});
+}
+function closePanel(){
+ if(!activeSection||!placeholder||!placeholder.parentNode)return;
+ placeholder.parentNode.insertBefore(activeSection,placeholder);placeholder.remove();placeholder=null;activeSection=null;
+ overlay.classList.remove('is-open');document.body.style.overflow='';
+ if(lastFocus&&lastFocus.focus)lastFocus.focus();
+}
+function openPanel(id,link){
+ const section=document.getElementById(id);if(!section)return;
+ ensurePanel();if(activeSection)closePanel();
+ lastFocus=link;placeholder=document.createComment('section position placeholder');section.parentNode.insertBefore(placeholder,section);
+ activeSection=section;dialog.appendChild(section);
+ overlay.classList.add('is-open');document.body.style.overflow='hidden';
+ const heading=section.querySelector('h1,h2,h3');if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true})}
+}
+document.querySelectorAll('.links a[href^="#"],.footlinks a[href^="#"]').forEach(link=>{
+ const id=link.getAttribute('href').slice(1);
+ if(!targets.has(id))return;
+ link.addEventListener('click',e=>{e.preventDefault();openPanel(id,link)});
 });
 })();
 </script>
