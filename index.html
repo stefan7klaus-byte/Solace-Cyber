@@ -93,14 +93,25 @@
 document.getElementById('year').textContent=new Date().getFullYear();
 document.getElementById('contactForm').addEventListener('submit',function(e){
  e.preventDefault();
- const f=new FormData(this);
- const to='Solace.cyber.workstations@mail.com';
+ const f=new FormData(this),to='Solace.cyber.workstations@mail.com';
  const subject='Solace website inquiry — '+f.get('wallet');
  const body='Hello Solace Cyber Workstations,\\n\\nI would like to ask about a wallet access issue.\\n\\nName: '+(f.get('name')||'Not provided')+'\\nReply email: '+f.get('email')+'\\nWallet/platform: '+f.get('wallet')+'\\nIssue: '+f.get('issue')+'\\nDescription: '+(f.get('message')||'Not provided')+'\\n\\nI have not included any private keys, passwords, or seed phrases.';
  const status=document.getElementById('formStatus');
  status.style.display='block';
- status.textContent='Your email app should open with a draft. Please review it before sending.';
- window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ status.replaceChildren();
+ const message=document.createElement('p');
+ message.textContent='Your inquiry is ready. If your email app does not open automatically, email '+to+' and include the details below.';
+ status.appendChild(message);
+ const mail=document.createElement('a');
+ mail.href='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ mail.textContent='Open email draft';
+ mail.style.cssText='display:inline-block;margin:6px 10px 6px 0;color:#a8f0c6;text-decoration:underline;font-weight:700';
+ status.appendChild(mail);
+ const copy=document.createElement('button');
+ copy.type='button';copy.className='btn';copy.textContent='Copy inquiry details';
+ copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText('To: '+to+'\\nSubject: '+subject+'\\n\\n'+body);copy.textContent='Copied';}catch{const area=document.createElement('textarea');area.value='To: '+to+'\\nSubject: '+subject+'\\n\\n'+body;area.style.width='100%';area.style.minHeight='130px';status.appendChild(area);area.focus();area.select();copy.textContent='Select and copy the text below';}});
+ status.appendChild(copy);
+ mail.click();
 });
 </script>
 <div class="support-contact-bar" aria-label="Contact Solace Cyber Workstations"><a href="tel:+12092944699">Call +1 (209) 294-4699</a><a href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a></div>
