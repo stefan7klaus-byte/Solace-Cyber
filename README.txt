@@ -33,8 +33,8 @@ To send an email when a visitor explicitly confirms a quote request, configure:
 
 If email notification settings are absent, quote requests are still saved in
 Netlify Blobs, but the chatbot tells the visitor that automatic notifications
-are not configured. Configure the three email settings before relying on the
-chatbot for team follow-up.
+are not configured. Configure RESEND_API_KEY and LEADS_FROM_EMAIL before relying
+on email notifications for team follow-up.
 
 The homepage contact form still prepares a mail draft in the visitor's email
 application. Community comments, visitor posts, post image uploads, and reviews
