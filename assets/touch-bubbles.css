@@ -1,0 +1,5 @@
+/* Cursor-touch bubbles: lightweight decorative bubbles that never block links or controls. */
+.scw-touch-bubble-layer{position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden;contain:strict}
+.scw-touch-bubble{position:absolute;width:var(--size,12px);height:var(--size,12px);border:1px solid rgba(168,240,198,.9);border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.75),rgba(106,220,162,.24) 36%,rgba(106,220,162,.05) 72%);box-shadow:inset -2px -3px 5px rgba(106,220,162,.15),0 0 10px rgba(106,220,162,.18);transform:translate(-50%,-50%) scale(.35);animation:scw-bubble-rise var(--duration,850ms) ease-out forwards}
+@keyframes scw-bubble-rise{0%{opacity:0;transform:translate(-50%,-35%) scale(.25)}12%{opacity:.9}70%{opacity:.65}100%{opacity:0;transform:translate(calc(-50% + var(--drift,12px)),calc(-50% - var(--rise,70px))) scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.scw-touch-bubble{animation-duration:1ms!important;opacity:0!important}}
