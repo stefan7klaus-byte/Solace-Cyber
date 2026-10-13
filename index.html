@@ -23,7 +23,7 @@
 <div class="topline"><div class="wrap"><span>Security-minded digital asset support</span><span>Clear process · Respect for your privacy</span></div></div>
 <header class="nav"><div class="wrap navin">
 <a class="brand" href="#home" aria-label="Solace Cyber Workstations home"><span class="mark">⌘</span><span>SOLACE CYBER<small>WORKSTATIONS</small></span></a>
-<nav class="links" aria-label="Main navigation"><a href="#services">Services</a><a href="#process">How it works</a><a href="#about">About</a><a href="blog.html">Blog</a><a href="#faq">FAQs</a></nav>
+<nav class="links" aria-label="Main navigation"><a href="#services">Services</a><a href="#process">How it works</a><a href="#security-check">Security check</a><a href="#about">About</a><a href="blog.html">Blog</a><a href="#faq">FAQs</a></nav>
 <a class="btn" href="#assessment">Request an assessment <span>↗</span></a>
 </div></header>
 <main>
@@ -73,6 +73,27 @@
 <details><summary>How long does recovery take?</summary><p>Time varies significantly depending on the technical situation. A provider should explain its expected timeline and how progress will be communicated after reviewing the case.</p></details>
 <details><summary>How can I protect myself from recovery scams?</summary><p>Never disclose your seed phrase to someone who contacts you unexpectedly. Verify a provider independently, avoid upfront payments you do not understand, and do not install remote-access software at a stranger's request.</p></details>
 </div></div></section>
+<section class="section" id="security-check"><div class="wrap">
+<div class="section-head"><div><div class="eyebrow">Interactive safety tool</div><h2>Check your next step before sharing anything.</h2></div><p>A quick, private checklist to help you prepare for a wallet-access conversation. Your answers stay in this browser and are not sent to Solace.</p></div>
+<div class="security-tool card" style="min-height:0">
+<form id="securityCheckForm">
+<div class="fields">
+<div class="field"><label for="sc-wallet">1. What do you still have?</label><select id="sc-wallet" name="wallet" required><option value="">Choose one</option><option value="file">An old wallet file or device</option><option value="phrase">A partial recovery phrase or notes</option><option value="account">Access to the wallet app or platform</option><option value="none">I'm not sure / I have very little information</option></select></div>
+<div class="field"><label for="sc-contact">2. Has someone contacted you unexpectedly offering recovery?</label><select id="sc-contact" name="contact" required><option value="">Choose one</option><option value="no">No</option><option value="yes">Yes</option><option value="unsure">I'm not sure if the offer is legitimate</option></select></div>
+<div class="field"><label for="sc-secrets">3. Has anyone asked for your seed phrase or private key?</label><select id="sc-secrets" name="secrets" required><option value="">Choose one</option><option value="no">No</option><option value="yes">Yes</option><option value="shared">I have already shared it</option></select></div>
+<div class="field"><label for="sc-payment">4. Has anyone guaranteed recovery or demanded an urgent upfront payment?</label><select id="sc-payment" name="payment" required><option value="">Choose one</option><option value="no">No</option><option value="yes">Yes</option><option value="unsure">I'm unsure</option></select></div>
+</div>
+<p class="notice">Do not enter wallet addresses, seed words, passwords, private keys, account IDs, or other confidential details in this tool.</p>
+<button class="btn" type="submit">Show my safety checklist →</button>
+</form>
+<div id="securityCheckResult" class="form-status" role="status" aria-live="polite" style="display:none"></div>
+</div>
+<div class="cards" style="margin-top:18px">
+<article class="card"><div class="icon">⛨</div><h3>Keep secrets offline</h3><p>Never send seed phrases, private keys, passwords, or remote-access codes through a contact form, email, or chat.</p></article>
+<article class="card"><div class="icon">⌕</div><h3>Verify before paying</h3><p>Independently verify who you are dealing with. Request written scope, fees, privacy terms, and limitations before authorizing work.</p></article>
+<article class="card"><div class="icon">↗</div><h3>Pause on pressure</h3><p>Guaranteed recovery, urgent payment demands, unsolicited messages, and requests to install remote-access tools are warning signs.</p></article>
+</div>
+</div></section>
 <section class="section" id="assessment"><div class="wrap contactgrid">
 <div class="contact-info"><div class="eyebrow">Free initial inquiry</div><h2 style="font-size:clamp(32px,4vw,46px);line-height:1.08;letter-spacing:-.04em">Let's understand your situation.</h2><p>Send a short, non-sensitive description. This form opens an email draft on your device; it does not upload your information to a server.</p><p><b>Email</b><br><a class="contact-email" href="mailto:Solace.cyber.workstations@mail.com">Solace.cyber.workstations@mail.com</a></p><p><b>Phone &amp; WhatsApp</b><br><a class="contact-email" href="tel:+12092944699">+1 (209) 294-4699</a><br><a class="contact-email" href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer">Chat with our team on WhatsApp →</a></p><p class="fine">Please do not include private keys, complete seed phrases, passwords, or identity documents in your first message.</p></div>
 <form class="form" id="contactForm">
@@ -91,6 +112,24 @@
 <footer class="footer"><div class="wrap footerin"><a class="brand" href="#home"><span class="mark">⌘</span><span>SOLACE CYBER<small>WORKSTATIONS</small></span></a><div>© <span id="year"></span> Solace Cyber Workstations. All rights reserved.</div><div class="footlinks"><a href="#services">Services</a><a href="blog.html">Blog</a><a href="#faq">FAQs</a><a href="#assessment">Contact</a></div></div></footer>
 <script>
 document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('securityCheckForm').addEventListener('submit',function(e){
+ e.preventDefault();
+ const f=new FormData(this),alerts=[];
+ if(f.get('contact')==='yes'||f.get('contact')==='unsure') alerts.push('Pause and independently verify anyone who contacted you unexpectedly. Do not install software or follow links they provide.');
+ if(f.get('secrets')==='yes') alerts.push('Do not share your seed phrase or private key. A legitimate initial assessment should not require them.');
+ if(f.get('secrets')==='shared') alerts.push('Treat the wallet as potentially compromised. From a trusted device, consider moving remaining assets to a new wallet you control and seek independent security guidance. Never reuse the exposed phrase.');
+ if(f.get('payment')==='yes'||f.get('payment')==='unsure') alerts.push('Do not pay under pressure or rely on a recovery guarantee. Request clear written terms and verify the provider independently.');
+ if(!alerts.length) alerts.push('Continue with a cautious, non-sensitive inventory of the wallet type, device or files you still have, and what changed. Recovery is never guaranteed.');
+ const result=document.getElementById('securityCheckResult');
+ result.replaceChildren();
+ const heading=document.createElement('strong');heading.textContent='Your next-step checklist';result.appendChild(heading);
+ const list=document.createElement('ul');list.style.cssText='padding-left:22px;margin:10px 0';
+ alerts.forEach(item=>{const li=document.createElement('li');li.textContent=item;list.appendChild(li)});
+ const general=document.createElement('li');general.textContent='Keep original devices and backups unchanged where possible; make copies before attempting file recovery.';list.appendChild(general);
+ result.appendChild(list);
+ const note=document.createElement('p');note.textContent='This is general safety guidance, not a diagnosis or guarantee of recovery. Your answers were processed locally and were not submitted.';result.appendChild(note);
+ result.style.display='block';
+});
 document.getElementById('contactForm').addEventListener('submit',function(e){
  e.preventDefault();
  const f=new FormData(this),to='Solace.cyber.workstations@mail.com';
