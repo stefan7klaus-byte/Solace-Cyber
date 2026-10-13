@@ -34,6 +34,7 @@ export default async function handler(request){
   const draft=session.draft;
   let reply="";
   const quoteIntent=/\b(quote|quotation|estimate|pricing proposal|price proposal|cost estimate)\b/i.test(latest);
+  const followupIntent=/\b(contact me|follow.?up|speak to (a )?(human|person|team member)|talk to (a )?(human|person|team member)|team member|call me|email me)\b/i.test(latest);
   if(draft.awaiting==="consent"){
     if(/^(yes|yes please|save request|submit|send|confirm|i agree)[.! ]*$/i.test(latest)){
       draft.submitted=true;draft.awaiting=null;session.messages=[];
@@ -43,13 +44,13 @@ export default async function handler(request){
       let notified=false;
       if(process.env.RESEND_API_KEY&&process.env.LEADS_NOTIFICATION_EMAIL&&process.env.LEADS_FROM_EMAIL){
         try{
-          const mail=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.LEADS_FROM_EMAIL,to:[process.env.LEADS_NOTIFICATION_EMAIL],subject:"New Solace Cyber Workstations quote request",text:"A visitor consented to a quote follow-up.\n\nName: "+(lead.details.name||"Skipped")+"\nEmail: "+(lead.details.email||"Skipped")+"\nPhone: "+(lead.details.phone||"Skipped")+"\nCompany: "+(lead.details.company||"Skipped")+"\n\nReview scope and authorization before offering work. Do not promise recovery outcomes."})});
+          const mail=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.LEADS_FROM_EMAIL,to:[process.env.LEADS_NOTIFICATION_EMAIL],subject:lead.intent==="quote"?"New Solace Cyber Workstations quote request":"New Solace Cyber Workstations support lead",text:"A visitor consented to a "+lead.intent+" follow-up.\n\nName: "+(lead.details.name||"Skipped")+"\nEmail: "+(lead.details.email||"Skipped")+"\nPhone: "+(lead.details.phone||"Skipped")+"\nCompany: "+(lead.details.company||"Skipped")+"\n\nReview scope and authorization before offering work. Do not promise recovery outcomes."})});
           notified=mail.ok;
         }catch(error){console.error("Lead notification failed",error)}
       }
       reply=notified
-        ?"Thank you. We’ve saved your request and notified our team to review it and prepare a quote. A team member will follow up using the contact details you provided. Scope, authorization, fees, and limitations must be agreed before any work begins."
-        :"Thank you. We’ve saved your quote request, but automatic team notifications are not configured yet. Please also contact our team directly so the request can be reviewed. Scope, authorization, fees, and limitations must be agreed before work begins.";
+        ?(lead.intent==="quote"?"Thank you. We’ve saved your request and notified our team to review it and prepare a quote. A team member will follow up using the contact details you provided. Scope, authorization, fees, and limitations must be agreed before any work begins.":"Thank you. We’ve saved your request and notified our team to follow up using the contact details you provided. We cannot guarantee a response time or a particular outcome.")
+        :(lead.intent==="quote"?"Thank you. We’ve saved your quote request, but automatic team notifications are not configured yet. Please also contact our team directly so the request can be reviewed. Scope, authorization, fees, and limitations must be agreed before work begins.":"Thank you. We’ve saved your request, but automatic team notifications are not configured yet. Please contact our team directly for follow-up. We cannot guarantee a response time or a particular outcome.");
     }else if(declines(latest)){
       draft.awaiting=null;draft.intent=null;draft.details={};draft.declined=[];session.messages=[];
       reply="Understood. We won't submit your contact details as a quote request. You can continue asking general questions here or contact our team directly when you're ready.";
@@ -69,9 +70,9 @@ export default async function handler(request){
       if(draft.awaiting)reply="Thanks. "+askField(draft.awaiting);
       else{draft.awaiting="consent";reply="May we save these details so our team can review your quote request and follow up?";}
     }
-  }else if(!draft.submitted&&quoteIntent){
-    draft.intent="quote";draft.awaiting="name";
-    reply="We can help you request a quote for authorized work. We’ll ask for contact details one at a time, and you can skip any field. "+askField("name");
+  }else if(!draft.submitted&&(quoteIntent||followupIntent)){
+    draft.intent=quoteIntent?"quote":"followup";draft.awaiting="name";
+    reply=(draft.intent==="quote"?"We can help you request a quote for authorized work.":"We can arrange a team follow-up about authorized support.")+" We’ll ask for contact details one at a time, and you can skip any field. "+askField("name");
   }else{
     const key=process.env.OPENAI_API_KEY;
     if(!key)return json({error:"Live AI support is not configured yet. Please use the assessment contact form while setup is completed."},503);
