@@ -37,8 +37,18 @@ export default async function handler(request){
   if(draft.awaiting==="consent"){
     if(/^(yes|yes please|save request|submit|send|confirm|i agree)[.! ]*$/i.test(latest)){
       draft.submitted=true;draft.awaiting=null;
-      await leads.setJSON("lead:"+id,{id,intent:draft.intent||"quote",details:draft.details,declinedFields:draft.declined,createdAt:new Date().toISOString(),status:"new",consented:true});
-      reply="Thank you. We’ve saved your request for our team to review and prepare a quote. A team member can follow up using the contact details you provided. Scope, authorization, fees, and limitations must be agreed before any work begins.";
+      const lead={id,intent:draft.intent||"quote",details:draft.details,declinedFields:draft.declined,createdAt:new Date().toISOString(),status:"new",consented:true};
+      await leads.setJSON("lead:"+id,lead);
+      let notified=false;
+      if(process.env.RESEND_API_KEY&&process.env.LEADS_NOTIFICATION_EMAIL&&process.env.LEADS_FROM_EMAIL){
+        try{
+          const mail=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+process.env.RESEND_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.LEADS_FROM_EMAIL,to:[process.env.LEADS_NOTIFICATION_EMAIL],subject:"New Solace Cyber Workstations quote request",text:"A visitor consented to a quote follow-up.\n\nName: "+(lead.details.name||"Skipped")+"\nEmail: "+(lead.details.email||"Skipped")+"\nPhone: "+(lead.details.phone||"Skipped")+"\nCompany: "+(lead.details.company||"Skipped")+"\n\nReview scope and authorization before offering work. Do not promise recovery outcomes."})});
+          notified=mail.ok;
+        }catch(error){console.error("Lead notification failed",error)}
+      }
+      reply=notified
+        ?"Thank you. We’ve saved your request and notified our team to review it and prepare a quote. A team member will follow up using the contact details you provided. Scope, authorization, fees, and limitations must be agreed before any work begins."
+        :"Thank you. We’ve saved your quote request, but automatic team notifications are not configured yet. Please also contact our team directly so the request can be reviewed. Scope, authorization, fees, and limitations must be agreed before work begins.";
     }else if(declines(latest)){
       draft.awaiting=null;draft.intent=null;
       reply="Understood. We won't submit your contact details as a quote request. You can continue asking general questions here or contact our team directly when you're ready.";
