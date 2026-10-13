@@ -44,7 +44,7 @@ export default async function handler(request){
     const bytes=Buffer.from(match[2],"base64");
     if(!bytes.length||bytes.length>2*1024*1024)return json({error:"Image must be between 1 byte and 2 MB."},413);
     const id=randomUUID();
-    await store.set("image:"+id,bytes,{metadata:{contentType:match[1]}});
+    await store.set("image:"+id,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),{metadata:{contentType:match[1]}});
     item.imageId=id;
    }
   }else if(action==="review"){
