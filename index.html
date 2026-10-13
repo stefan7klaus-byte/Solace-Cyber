@@ -232,8 +232,8 @@
 <div class="field full"><label for="issue">What happened? *</label><select id="issue" name="issue" required><option value="">Choose the issue</option><option>Forgotten password</option><option>Missing recovery phrase words</option><option>Old wallet file or computer</option><option>Inherited wallet</option><option>Other / not sure</option></select></div>
 <div class="field full"><label for="message">Brief description (no secrets)</label><textarea id="message" name="message" placeholder="For example: I have an old wallet file from a computer I no longer use."></textarea></div>
 </div>
-<p class="notice">By continuing, your email app will open with the details you entered so you can review them before sending. Do not include passwords, seed phrases, or private keys.</p>
-<button class="btn" type="submit">Prepare email inquiry →</button><div class="form-status" id="formStatus" role="status"></div>
+<p class="notice">Submit your inquiry directly from this form. Do not include passwords, seed phrases, or private keys.</p>
+<button class="btn" type="submit">Submit inquiry →</button><div class="form-status" id="formStatus" role="status"></div>
 </form>
 </div></section>
 
@@ -272,29 +272,51 @@ document.getElementById('securityCheckForm').addEventListener('submit',function(
  const note=document.createElement('p');note.textContent='This is general safety guidance, not a diagnosis or guarantee of recovery. Your answers were processed locally and were not submitted.';result.appendChild(note);
  result.style.display='block';
 });
-document.getElementById('contactForm').addEventListener('submit',function(e){
+document.getElementById('contactForm').addEventListener('submit',async function(e){
  e.preventDefault();
- const f=new FormData(this),to='Solace.cyber.workstations@mail.com';
- const subject='Solace website inquiry — '+f.get('wallet');
- const body='Hello Solace Cyber Workstations,\\n\\nI would like to ask about a wallet access issue.\\n\\nName: '+(f.get('name')||'Not provided')+'\\nReply email: '+f.get('email')+'\\nWallet/platform: '+f.get('wallet')+'\\nIssue: '+f.get('issue')+'\\nDescription: '+(f.get('message')||'Not provided')+'\\n\\nI have not included any private keys, passwords, or seed phrases.';
+ const form=this;
+ const f=new FormData(form);
  const status=document.getElementById('formStatus');
+ const submit=form.querySelector('button[type="submit"]');
+ const to='Solace.cyber.workstations@mail.com';
+ const payload={
+   name:f.get('name')||'Not provided',
+   email:f.get('email'),
+   wallet:f.get('wallet'),
+   issue:f.get('issue'),
+   message:f.get('message')||'Not provided',
+   _subject:'Solace website inquiry — '+f.get('wallet'),
+   _replyto:f.get('email'),
+   _template:'table'
+ };
  status.style.display='block';
- status.replaceChildren();
- const message=document.createElement('p');
- message.textContent='Your inquiry is ready. If your email app does not open automatically, email '+to+' and include the details below.';
- status.appendChild(message);
- const mail=document.createElement('a');
- mail.href='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
- mail.textContent='Open email draft';
- mail.style.cssText='display:inline-block;margin:6px 10px 6px 0;color:#a8f0c6;text-decoration:underline;font-weight:700';
- status.appendChild(mail);
- const copy=document.createElement('button');
- copy.type='button';copy.className='btn';copy.textContent='Copy inquiry details';
- copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText('To: '+to+'\\nSubject: '+subject+'\\n\\n'+body);copy.textContent='Copied';}catch{const area=document.createElement('textarea');area.value='To: '+to+'\\nSubject: '+subject+'\\n\\n'+body;area.style.width='100%';area.style.minHeight='130px';status.appendChild(area);area.focus();area.select();copy.textContent='Select and copy the text below';}});
- status.appendChild(copy);
- mail.click();
+ status.textContent='Sending your inquiry…';
+ submit.disabled=true;
+ const originalLabel=submit.textContent;
+ submit.textContent='Sending…';
+ try{
+   const response=await fetch('https://formsubmit.co/ajax/'+encodeURIComponent(to),{
+     method:'POST',
+     headers:{'Content-Type':'application/json','Accept':'application/json'},
+     body:JSON.stringify(payload)
+   });
+   let result={};
+   try{result=await response.json()}catch{}
+   if(!response.ok||result.success===false||result.success==='false'){
+     throw new Error(result.message||'The email service could not accept the inquiry.');
+   }
+   status.textContent='Thank you — your inquiry has been submitted. We’ll use the email address you provided to reply.';
+   form.reset();
+ }catch(error){
+   status.replaceChildren();
+   const message=document.createElement('p');
+   message.textContent='We could not send your inquiry automatically. Please try again in a moment, or email '+to+' directly. '+(error&&error.message?error.message:'');
+   status.appendChild(message);
+ }finally{
+   submit.disabled=false;
+   submit.textContent=originalLabel;
+ }
 });
-</script>
 <div class="support-contact-bar" aria-label="Contact Solace Cyber Workstations"><a href="tel:+12092944699">Call +1 (209) 294-4699</a><a href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a></div>
 <a class="support-whatsapp" href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer" aria-label="Contact Solace Cyber Workstations on WhatsApp at +1 (209) 294-4699"><svg viewBox="0 0 32 32" aria-hidden="true" fill="currentColor"><path d="M16 3a13 13 0 0 0-11.3 19.4L3 29l6.8-1.8A13 13 0 1 0 16 3zm0 2a11 11 0 1 1-5.5 20.5l-.4-.2-4.3 1.1 1.1-4.2-.3-.4A11 11 0 0 1 16 5zm-4.6 5.5c-.4 0-.8.1-1.1.5-.5.5-1.1 1.2-1.1 2.5 0 1.4 1 2.8 1.1 3 .2.2 2 3.2 5 4.4 2.5 1 3 .8 3.6.7.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4l-2.1-1c-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.3-.7.1a9 9 0 0 1-2.5-1.5 9.1 9.1 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.2c-.2-.6-.5-.6-.8-.6h-.6z"/></svg><span>WhatsApp</span></a>
 <button class="support-chat-toggle" id="support-chat-toggle" type="button" aria-controls="support-chat" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 11.5a8 8 0 0 1-8 8 9 9 0 0 1-3.5-.7L4 20l1.2-4.5a8 8 0 1 1 14.8-4z"/><path d="M8 10h8M8 14h5"/></svg><span>AI support</span></button>
