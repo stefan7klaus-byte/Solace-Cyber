@@ -12,6 +12,11 @@
 @media(max-width:850px){.links{gap:14px}.hero-grid,.split,.contactgrid{grid-template-columns:1fr;gap:35px}.hero{padding-top:60px}.visual{min-height:390px}.cards{grid-template-columns:1fr 1fr}.process{grid-template-columns:1fr 1fr}.section-head{display:block}.section-head p{margin-top:15px}.callout{align-items:flex-start;flex-direction:column}}
 @media(max-width:600px){.wrap{width:min(100% - 30px,var(--max))}.topline .wrap{font-size:9px}.navin{height:68px}.links{display:none}.navin>.btn{padding:10px 12px;font-size:12px}.brand{font-size:12px}.hero{padding:48px 0}.hero p{font-size:16px}.visual{min-height:350px;padding:15px}.orb{width:175px;height:175px}.float{font-size:10px;padding:10px}.f1{left:10px;top:15px}.f2{right:10px;top:85px}.f3{left:10px;bottom:18px}.f4{right:10px;bottom:20px}.cards,.process,.fields{grid-template-columns:1fr}.section{padding:58px 0}.card{min-height:auto}.callout{padding:25px}.form{padding:18px}}
 </style>
+<link rel="stylesheet" href="assets/background.css">
+<link rel="stylesheet" href="assets/support-widget.css">
+<script src="assets/support-widget.js" defer></script>
+<link rel="stylesheet" href="assets/community.css">
+<script src="assets/community.js" defer></script>
 </head>
 <body>
 <div class="topline"><div class="wrap"><span>Security-minded digital asset support</span><span>Clear process · Respect for your privacy</span></div></div>
@@ -68,7 +73,7 @@
 <details><summary>How can I protect myself from recovery scams?</summary><p>Never disclose your seed phrase to someone who contacts you unexpectedly. Verify a provider independently, avoid upfront payments you do not understand, and do not install remote-access software at a stranger's request.</p></details>
 </div></div></section>
 <section class="section" id="assessment"><div class="wrap contactgrid">
-<div class="contact-info"><div class="eyebrow">Free initial inquiry</div><h2 style="font-size:clamp(32px,4vw,46px);line-height:1.08;letter-spacing:-.04em">Let's understand your situation.</h2><p>Send a short, non-sensitive description. This form opens an email draft on your device; it does not upload your information to a server.</p><p><b>Email</b><br><a class="contact-email" href="mailto:Solace.cyber.workstations@mail.com">Solace.cyber.workstations@mail.com</a></p><p class="fine">Please do not include private keys, complete seed phrases, passwords, or identity documents in your first message.</p></div>
+<div class="contact-info"><div class="eyebrow">Free initial inquiry</div><h2 style="font-size:clamp(32px,4vw,46px);line-height:1.08;letter-spacing:-.04em">Let's understand your situation.</h2><p>Send a short, non-sensitive description. This form opens an email draft on your device; it does not upload your information to a server.</p><p><b>Email</b><br><a class="contact-email" href="mailto:Solace.cyber.workstations@mail.com">Solace.cyber.workstations@mail.com</a></p><p><b>Phone &amp; WhatsApp</b><br><a class="contact-email" href="tel:+12092944699">+1 (209) 294-4699</a><br><a class="contact-email" href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer">Chat with our team on WhatsApp →</a></p><p class="fine">Please do not include private keys, complete seed phrases, passwords, or identity documents in your first message.</p></div>
 <form class="form" id="contactForm">
 <div class="fields">
 <div class="field"><label for="name">Your name</label><input id="name" name="name" autocomplete="name" placeholder="Name (optional)"></div>
@@ -97,5 +102,8 @@ document.getElementById('contactForm').addEventListener('submit',function(e){
  window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 });
 </script>
+<div class="support-contact-bar" aria-label="Contact Solace Cyber Workstations"><a href="tel:+12092944699">Call +1 (209) 294-4699</a><a href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a></div>
+<a class="support-whatsapp" href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer" aria-label="Contact Solace Cyber Workstations on WhatsApp at +1 (209) 294-4699"><svg viewBox="0 0 32 32" aria-hidden="true" fill="currentColor"><path d="M16 3a13 13 0 0 0-11.3 19.4L3 29l6.8-1.8A13 13 0 1 0 16 3zm0 2a11 11 0 1 1-5.5 20.5l-.4-.2-4.3 1.1 1.1-4.2-.3-.4A11 11 0 0 1 16 5zm-4.6 5.5c-.4 0-.8.1-1.1.5-.5.5-1.1 1.2-1.1 2.5 0 1.4 1 2.8 1.1 3 .2.2 2 3.2 5 4.4 2.5 1 3 .8 3.6.7.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4l-2.1-1c-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.3-.7.1a9 9 0 0 1-2.5-1.5 9.1 9.1 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.2c-.2-.6-.5-.6-.8-.6h-.6z"/></svg><span>WhatsApp</span></a>
+<button class="support-chat-toggle" id="support-chat-toggle" type="button" aria-controls="support-chat" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 11.5a8 8 0 0 1-8 8 9 9 0 0 1-3.5-.7L4 20l1.2-4.5a8 8 0 1 1 14.8-4z"/><path d="M8 10h8M8 14h5"/></svg><span>AI support</span></button>
 </body>
 </html>

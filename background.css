@@ -1,0 +1,20 @@
+body {
+  position: relative;
+  isolation: isolate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(rgba(11, 17, 16, 0.76), rgba(11, 17, 16, 0.88)),
+    url("cyber-background.jpg") center / cover no-repeat;
+}
+
+.binary-rain { position: fixed; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; opacity: .34; }
+.binary-stream { position: absolute; top: 0; color: #86cfa4; font: 15px/1.5 "Courier New", monospace; white-space: pre; animation: binary-fall var(--duration) linear infinite; animation-delay: var(--delay); text-shadow: 0 0 2px #86cfa455; }
+.binary-rain.is-paused .binary-stream { animation-play-state: paused; }
+@keyframes binary-fall { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
+@media (prefers-reduced-motion: reduce) { .binary-rain { display: none; } }
