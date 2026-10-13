@@ -31,7 +31,7 @@ create policy "Visitors can submit community entries for review"
     and char_length(trim(name)) between 1 and 80
     and char_length(trim(content)) between 2 and 5000
     and type in ('comment','post','review')
-    and (type <> 'review' or rating between 1 and 5)
+    and (type <> 'review' or (rating is not null and rating between 1 and 5))
   );
 
 -- Submissions are intentionally pending until you review and approve them
