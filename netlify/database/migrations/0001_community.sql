@@ -1,0 +1,8 @@
+-- Initial Solace Cyber Workstations persistence schema reference.
+-- Community and lead records currently use Netlify Blobs JSON objects so the
+-- static site can launch without requiring a separately provisioned SQL database.
+-- If moving to Netlify Database later, use these logical record shapes:
+-- community_entries(id UUID PRIMARY KEY, type TEXT, name TEXT, title TEXT,
+-- text TEXT, article TEXT, rating SMALLINT, image_id UUID, created_at TIMESTAMPTZ)
+-- quote_leads(id UUID PRIMARY KEY, name TEXT, email TEXT, phone TEXT,
+-- company TEXT, service TEXT, created_at TIMESTAMPTZ)
