@@ -36,7 +36,7 @@ export default async function handler(request){
   const quoteIntent=/\b(quote|quotation|estimate|pricing proposal|price proposal|cost estimate)\b/i.test(latest);
   if(draft.awaiting==="consent"){
     if(/^(yes|yes please|save request|submit|send|confirm|i agree)[.! ]*$/i.test(latest)){
-      draft.submitted=true;draft.awaiting=null;
+      draft.submitted=true;draft.awaiting=null;session.messages=[];
       const lead={id,intent:draft.intent||"quote",details:draft.details,declinedFields:draft.declined,createdAt:new Date().toISOString(),status:"new",consented:true};
       await leads.setJSON("lead:"+id,lead);
       draft.details={};draft.declined=[];
@@ -51,7 +51,7 @@ export default async function handler(request){
         ?"Thank you. We’ve saved your request and notified our team to review it and prepare a quote. A team member will follow up using the contact details you provided. Scope, authorization, fees, and limitations must be agreed before any work begins."
         :"Thank you. We’ve saved your quote request, but automatic team notifications are not configured yet. Please also contact our team directly so the request can be reviewed. Scope, authorization, fees, and limitations must be agreed before work begins.";
     }else if(declines(latest)){
-      draft.awaiting=null;draft.intent=null;draft.details={};draft.declined=[];
+      draft.awaiting=null;draft.intent=null;draft.details={};draft.declined=[];session.messages=[];
       reply="Understood. We won't submit your contact details as a quote request. You can continue asking general questions here or contact our team directly when you're ready.";
     }else{
       reply="Please confirm whether we may save these details for our team to review your quote request. Would you like us to save and submit the request?";
