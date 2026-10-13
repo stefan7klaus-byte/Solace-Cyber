@@ -1,0 +1,6 @@
+/* Solace Cyber Workstations: lightweight animated binary backdrop */
+body{position:relative;isolation:isolate}
+#scw-binary-rain{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.19;contain:strict}
+.scw-binary-column{position:absolute;top:-120vh;color:#55ff9a;font:600 13px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;writing-mode:vertical-rl;text-shadow:0 0 8px #00ff7540;animation:scw-binary-fall linear infinite;user-select:none}
+@keyframes scw-binary-fall{from{transform:translateY(-15vh)}to{transform:translateY(230vh)}}
+@media(prefers-reduced-motion:reduce){.scw-binary-column{animation:none;top:0;opacity:.35}}
