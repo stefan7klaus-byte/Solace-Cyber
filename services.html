@@ -125,6 +125,33 @@
 <script src="assets/background.js" defer></script>
 <link rel="stylesheet" href="assets/touch-bubbles.css">
 <script src="assets/touch-bubbles.js" defer></script>
+<style id="scw-nav-hover-glow-shake-all-pages">
+/* Keep navigation hover feedback active after links became separate pages. */
+.links a{
+  position:relative;
+  transform-origin:center;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .18s ease,text-shadow .18s ease,filter .18s ease;
+}
+.links a:hover,.links a.scw-nav-hover-active,.links a:focus-visible{
+  color:#e4ffed!important;
+  text-shadow:0 0 6px rgba(168,240,198,.95),0 0 16px rgba(106,220,162,.8),0 0 28px rgba(106,220,162,.42);
+  filter:drop-shadow(0 0 5px rgba(106,220,162,.65));
+  animation:scw-nav-hover-shake .42s ease-in-out both,scw-nav-hover-pulse 1.05s ease-in-out infinite;
+}
+@keyframes scw-nav-hover-shake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  18%{transform:translateX(-2px) rotate(-1deg)}
+  36%{transform:translateX(2px) rotate(1deg)}
+  54%{transform:translateX(-2px) rotate(-.7deg)}
+  72%{transform:translateX(2px) rotate(.7deg)}
+}
+@keyframes scw-nav-hover-pulse{
+  0%,100%{text-shadow:0 0 5px rgba(168,240,198,.65),0 0 12px rgba(106,220,162,.45)}
+  50%{text-shadow:0 0 8px rgba(220,255,232,1),0 0 21px rgba(106,220,162,.95),0 0 30px rgba(106,220,162,.5)}
+}
+@media(prefers-reduced-motion:reduce){.links a:hover,.links a.scw-nav-hover-active,.links a:focus-visible{animation:none;filter:none;text-shadow:0 0 10px rgba(106,220,162,.8)}}
+</style>
 </head>
 <body>
 <div class="topline"><div class="wrap"><span>Security-minded digital asset support</span><span>Clear process · Respect for your privacy</span></div></div>
@@ -151,4 +178,21 @@
 <div class="support-contact-bar" aria-label="Contact Solace Cyber Workstations"><a href="tel:+12092944699">Call +1 (209) 294-4699</a><a href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a></div><a class="support-whatsapp" href="https://wa.me/12092944699" target="_blank" rel="noopener noreferrer" aria-label="Contact Solace Cyber Workstations on WhatsApp at +1 (209) 294-4699"><svg viewBox="0 0 32 32" aria-hidden="true" fill="currentColor"><path d="M16 3a13 13 0 0 0-11.3 19.4L3 29l6.8-1.8A13 13 0 1 0 16 3zm0 2a11 11 0 1 1-5.5 20.5l-.4-.2-4.3 1.1 1.1-4.2-.3-.4A11 11 0 0 1 16 5zm-4.6 5.5c-.4 0-.8.1-1.1.5-.5.5-1.1 1.2-1.1 2.5 0 1.4 1 2.8 1.1 3 .2.2 2 3.2 5 4.4 2.5 1 3 .8 3.6.7.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4l-2.1-1c-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.3-.7.1a9 9 0 0 1-2.5-1.5 9.1 9.1 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.2c-.2-.6-.5-.6-.8-.6h-.6z"/></svg><span>WhatsApp</span></a>
 <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 
+<script id="scw-nav-hover-shake-all-pages">
+(()=>{'use strict';
+document.querySelectorAll('.links a').forEach(link=>{
+ let release;
+ const activate=()=>{
+   link.classList.remove('scw-nav-hover-active');
+   void link.offsetWidth;
+   link.classList.add('scw-nav-hover-active');
+   window.clearTimeout(release);
+   release=window.setTimeout(()=>link.classList.remove('scw-nav-hover-active'),1100);
+ };
+ link.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')activate()});
+ link.addEventListener('touchstart',activate,{passive:true});
+ link.addEventListener('focus',activate);
+});
+})();
+</script>
 </body></html>
