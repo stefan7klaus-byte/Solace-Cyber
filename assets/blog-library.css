@@ -1,0 +1,55 @@
+[hidden] { display: none !important; }
+.editorial-note { border-left: 3px solid #a8f0c6; padding: 16px 20px; background: #14201bea; color: #c2cec7; font-size: 14px; }
+.library-tools { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin: 28px 0 16px; }
+.library-tools label { display: grid; gap: 8px; color: #c2cec7; font-size: 14px; }
+.library-tools input, .library-tools select { width: 100%; min-height: 48px; padding: 12px; border: 1px solid #355341; border-radius: 7px; background: #111b19; color: #f4f6f1; font: inherit; color-scheme: dark; }
+.library-status, .library-empty { color: #a8b5ae; }
+.recommendation-card { display: flex; }
+.recommendation-card .content { display: flex; flex-direction: column; width: 100%; }
+.recommendation-card .read { margin-top: auto; padding-top: 12px; }
+.recommendation-card h3 a:hover { color: #a8f0c6; }
+.library-pagination { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 18px; margin-top: 28px; }
+.library-pagination button { min-height: 44px; padding: 10px 16px; background: #14201b; border: 1px solid #355341; border-radius: 7px; color: #a8f0c6; font: inherit; cursor: pointer; }
+.library-pagination button:hover:not(:disabled) { background: #243c2e; }
+.library-pagination button:disabled { opacity: .45; cursor: default; }
+#recommendation-cards { scroll-margin-top: 100px; }
+.article-page { margin: 0; background: #0b1110; color: #f4f6f1; font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.75; }
+.article-page * { box-sizing: border-box; }
+.article-page a { color: #a8f0c6; text-underline-offset: 4px; }
+.article-page a:hover { text-decoration-thickness: 2px; }
+.article-wrap { width: min(790px, calc(100% - 44px)); margin: auto; }
+.article-header { background: #0b1110ed; border-bottom: 1px solid #293a34; }
+.article-header .article-wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 90px; }
+.article-header nav { display: flex; gap: 20px; font-size: 14px; }
+.article-brand { font-weight: 800; letter-spacing: .05em; text-decoration: none; color: #f4f6f1 !important; }
+.article-brand small { display: block; font-size: 10px; letter-spacing: .18em; color: #a8b5ae; }
+.breadcrumb { margin: 35px 0; color: #a8b5ae; font-size: 13px; }
+.article-category { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #a8f0c6; }
+.article-page h1 { margin: 16px 0 20px; font-size: clamp(32px, 5.5vw, 54px); line-height: 1.12; letter-spacing: -.04em; }
+.article-byline { color: #a8b5ae; font-size: 14px; }
+.article-page h2 { margin: 36px 0 12px; font-size: 25px; line-height: 1.3; letter-spacing: -.02em; }
+.article-page article > p:not(.article-category):not(.article-byline) { color: #c2cec7; }
+.decision-list { padding-left: 23px; color: #c2cec7; }
+.decision-list li { margin: 10px 0; }
+.article-limit { font-size: 14px; border-top: 1px solid #293a34; padding-top: 20px; }
+.article-contact { padding: 28px; margin-top: 36px; border: 1px solid #355341; border-radius: 13px; background: #13241a; }
+.article-contact h2 { margin-top: 0; }
+.article-contact p { color: #a8b5ae; }
+.article-button { display: inline-block; padding: 12px 17px; border-radius: 7px; background: #a8f0c6; color: #0b1711 !important; font-size: 14px; font-weight: 750; text-decoration: none; }
+.article-pagination { display: flex; justify-content: space-between; gap: 20px; margin: 40px 0; font-size: 14px; }
+.article-footer { padding: 25px 0; border-top: 1px solid #293a34; color: #a8b5ae; font-size: 12px; }
+.skip-link { position: absolute; top: -100px; left: 20px; z-index: 3; padding: 12px; background: #13241a; }
+.skip-link:focus { top: 12px; }
+:where(.article-page, #recommendations) :is(a, button, input, select):focus-visible { outline: 3px solid #a8f0c6; outline-offset: 4px; }
+@media (max-width: 560px) {
+  .library-tools { grid-template-columns: 1fr; }
+  .article-wrap { width: calc(100% - 30px); }
+  .article-header .article-wrap { gap: 14px; min-height: 80px; }
+  .article-header nav { gap: 12px; font-size: 12px; }
+  .article-brand { font-size: 13px; }
+  .article-contact { padding: 20px; }
+  .article-pagination { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
