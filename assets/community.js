@@ -1,5 +1,10 @@
 (()=>{'use strict';
 const LOCAL_KEY='scw-community-local-v1';
+/* Load the decorative cursor effect anywhere the community widget is present. */
+if(!document.querySelector('script[data-scw-bubbles]')){
+ const bubbleCss=document.createElement('link');bubbleCss.rel='stylesheet';bubbleCss.href='assets/touch-bubbles.css';document.head.appendChild(bubbleCss);
+ const bubbleScript=document.createElement('script');bubbleScript.src='assets/touch-bubbles.js';bubbleScript.defer=true;bubbleScript.dataset.scwBubbles='true';document.head.appendChild(bubbleScript);
+}
 const cfg=window.SCW_COMMUNITY_CONFIG||{};
 const remoteReady=Boolean(cfg.supabaseUrl&&cfg.anonKey&&!/YOUR-PROJECT-REF|YOUR_SUPABASE/i.test(cfg.supabaseUrl+' '+cfg.anonKey));
 const base=String(cfg.supabaseUrl||'').replace(/\/$/,'')+'/rest/v1/community_entries';
