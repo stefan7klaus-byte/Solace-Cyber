@@ -38,9 +38,9 @@ chatbot for team follow-up.
 
 The homepage contact form still prepares a mail draft in the visitor's email
 application. Community comments, visitor posts, post image uploads, and reviews
-are published publicly without a sign-in or moderation queue. Add moderation,
-rate limiting, and a privacy/retention policy before promoting the community
-widely. Do not publish sensitive data or recovery credentials.
+are published publicly without a sign-in or moderation queue. Submissions currently publish immediately and cannot be removed through a
+visitor-facing moderation tool. Add a moderation and privacy/retention policy
+before promoting the community widely. Basic per-IP submission rate limiting is enabled. Do not publish sensitive data or recovery credentials.
 
 IMPORTANT HOSTING NOTE
 GitHub Pages cannot run the backend functions. The live production site must be
