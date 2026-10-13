@@ -27,8 +27,9 @@ REQUIRED NETLIFY ENVIRONMENT VARIABLE
 OPTIONAL QUOTE-REQUEST EMAIL NOTIFICATIONS
 To send an email when a visitor explicitly confirms a quote request, configure:
 - RESEND_API_KEY: API key for Resend
-- LEADS_NOTIFICATION_EMAIL: inbox that should receive leads
 - LEADS_FROM_EMAIL: sender address verified with Resend
+- LEADS_NOTIFICATION_EMAIL (optional): inbox that should receive leads; defaults to
+  the site's current contact email, Solace.cyber.workstations@mail.com
 
 If email notification settings are absent, quote requests are still saved in
 Netlify Blobs, but the chatbot tells the visitor that automatic notifications
