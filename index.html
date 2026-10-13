@@ -118,6 +118,33 @@
 <script src="assets/background.js" defer></script>
 <link rel="stylesheet" href="assets/touch-bubbles.css">
 <script src="assets/touch-bubbles.js" defer></script>
+<style id="scw-nav-hover-glow-shake-all-pages">
+/* Keep navigation hover feedback active after links became separate pages. */
+.links a{
+  position:relative;
+  transform-origin:center;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .18s ease,text-shadow .18s ease,filter .18s ease;
+}
+.links a:hover,.links a.scw-nav-hover-active,.links a:focus-visible{
+  color:#e4ffed!important;
+  text-shadow:0 0 6px rgba(168,240,198,.95),0 0 16px rgba(106,220,162,.8),0 0 28px rgba(106,220,162,.42);
+  filter:drop-shadow(0 0 5px rgba(106,220,162,.65));
+  animation:scw-nav-hover-shake .42s ease-in-out both,scw-nav-hover-pulse 1.05s ease-in-out infinite;
+}
+@keyframes scw-nav-hover-shake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  18%{transform:translateX(-2px) rotate(-1deg)}
+  36%{transform:translateX(2px) rotate(1deg)}
+  54%{transform:translateX(-2px) rotate(-.7deg)}
+  72%{transform:translateX(2px) rotate(.7deg)}
+}
+@keyframes scw-nav-hover-pulse{
+  0%,100%{text-shadow:0 0 5px rgba(168,240,198,.65),0 0 12px rgba(106,220,162,.45)}
+  50%{text-shadow:0 0 8px rgba(220,255,232,1),0 0 21px rgba(106,220,162,.95),0 0 30px rgba(106,220,162,.5)}
+}
+@media(prefers-reduced-motion:reduce){.links a:hover,.links a.scw-nav-hover-active,.links a:focus-visible{animation:none;filter:none;text-shadow:0 0 10px rgba(106,220,162,.8)}}
+</style>
 </head>
 <body>
 <div class="topline"><div class="wrap"><span>Security-minded digital asset support</span><span>Clear process · Respect for your privacy</span></div></div>
@@ -367,6 +394,23 @@ async function searchMarkets(signal){const data=await get('https://gamma-api.pol
 form.addEventListener('submit',async e=>{e.preventDefault();if(controller)controller.abort();controller=new AbortController();const signal=controller.signal;const type=kind.value,q=query.value.trim();if(type!=='markets'&&!q)return;submit.disabled=true;submit.textContent='Searching…';reset('Searching public data','Connecting to a public read-only data provider. This can take a few seconds.');try{if(type==='markets')await searchMarkets(signal);else if(chain.value==='bitcoin')await searchBitcoin(type,q,signal);else await searchEthereum(type,q,signal)}catch(err){if(err.name!=='AbortError'){reset('Search unavailable',err.message||'The public provider could not be reached. Try again later or check the identifier.');results.lastChild&&results.lastChild.classList.add('scw-explorer-error');const note=node('p','No wallet credentials are needed. Your search has not signed or sent any transaction.','scw-explorer-muted');results.append(note)}}finally{if(!signal.aborted){submit.disabled=false;submit.textContent=kind.value==='markets'?'Load prediction markets →':'Search public data →'}}});
 document.getElementById('scw-explorer-clear').addEventListener('click',()=>{query.value='';reset('Ready to search','Choose a search type and enter a public identifier.');query.focus()});
 updateFields();
+})();
+</script>
+<script id="scw-nav-hover-shake-all-pages">
+(()=>{'use strict';
+document.querySelectorAll('.links a').forEach(link=>{
+ let release;
+ const activate=()=>{
+   link.classList.remove('scw-nav-hover-active');
+   void link.offsetWidth;
+   link.classList.add('scw-nav-hover-active');
+   window.clearTimeout(release);
+   release=window.setTimeout(()=>link.classList.remove('scw-nav-hover-active'),1100);
+ };
+ link.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')activate()});
+ link.addEventListener('touchstart',activate,{passive:true});
+ link.addEventListener('focus',activate);
+});
 })();
 </script>
 </body>
