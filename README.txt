@@ -10,31 +10,17 @@ Blog topic links open an email draft. Replace sample topic cards with finished a
 Review all business, privacy, service, and legal claims before publishing.
 
 
-NETLIFY HOSTING AND BACKEND
----------------------------
-The repository is configured for Netlify static hosting plus serverless functions.
-Connect this GitHub repository to Netlify and deploy from the repository root.
-The configured build command is `npm run build`; it creates a clean `dist/`
-static publish directory while keeping function source outside the public output.
-Netlify deploys functions from `netlify/functions`. The community API and support chatbot use Netlify Blobs for
-persistent records and uploaded images.
+GITHUB-ONLY SUPPORT CHAT
+------------------------
+The support widget in `assets/support-widget.js` is a browser-based FAQ helper. It runs
+on static hosting such as GitHub Pages and does not call the former Netlify AI endpoint,
+require an API key, or send chat messages to an AI provider. It answers common questions
+using built-in service guidance; it is not a generative AI model and does not provide
+server-side chat history or lead storage.
 
-REQUIRED NETLIFY ENVIRONMENT VARIABLE
-- OPENAI_API_KEY: an OpenAI API key for live AI support. Set it in Netlify's
-  project environment-variable settings with Functions scope, then redeploy.
-- OPENAI_MODEL (optional): model name; defaults to gpt-4o-mini.
-
-OPTIONAL QUOTE-REQUEST EMAIL NOTIFICATIONS
-To send an email when a visitor explicitly confirms a quote request, configure:
-- RESEND_API_KEY: API key for Resend
-- LEADS_FROM_EMAIL: sender address verified with Resend
-- LEADS_NOTIFICATION_EMAIL (optional): inbox that should receive leads; defaults to
-  the site's current contact email, Solace.cyber.workstations@mail.com
-
-If email notification settings are absent, quote requests are still saved in
-Netlify Blobs, but the chatbot tells the visitor that automatic notifications
-are not configured. Configure RESEND_API_KEY and LEADS_FROM_EMAIL before relying
-on email notifications for team follow-up.
+The former `netlify/functions/chat.mjs` AI chatbot endpoint has been removed. Netlify
+may still be used separately for other existing backend features, but it is not required
+for the FAQ chat widget.
 
 The homepage contact form still prepares a mail draft in the visitor's email
 application. Community comments, visitor posts, post image uploads, and reviews
