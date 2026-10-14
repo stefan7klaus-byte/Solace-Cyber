@@ -18,3 +18,22 @@ if(existingOpen){
 }
 document.body.appendChild(button);
 })();
+/* Persistent floating link to the crypto tracing and recovery library. */
+if(!document.querySelector('.scw-floating-guides-link')){
+ const guideStyle=document.createElement('style');
+ guideStyle.textContent=`
+ .scw-floating-guides-link{position:fixed;right:20px;bottom:20px;z-index:9997;display:flex;align-items:center;gap:10px;max-width:250px;padding:12px 15px;border:1px solid rgba(168,240,198,.65);border-radius:14px;background:rgba(13,28,21,.96);color:#eaf8ef;text-decoration:none;box-shadow:0 8px 28px rgba(0,0,0,.32);font:600 13px/1.35 Inter,system-ui,sans-serif;backdrop-filter:blur(10px);transition:transform .18s ease,border-color .18s ease}
+ .scw-floating-guides-link:hover{transform:translateY(-3px);border-color:#a8f0c6}
+ .scw-floating-guides-link .scw-guides-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:#a8f0c6;color:#102017;font-size:18px}
+ .scw-floating-guides-link small{display:block;margin-top:3px;color:#b8cfc0;font-size:11px;font-weight:400}
+ @media(max-width:600px){.scw-floating-guides-link{right:12px;bottom:12px;max-width:220px;padding:10px 12px;font-size:12px}}
+ @media(prefers-reduced-motion:reduce){.scw-floating-guides-link{transition:none}}
+ `;
+ document.head.appendChild(guideStyle);
+ const link=document.createElement('a');
+ link.className='scw-floating-guides-link';
+ link.href='/crypto-tracing-recovery.html';
+ link.setAttribute('aria-label','Open the 150 Crypto Tracing and Recovery Guides');
+ link.innerHTML='<span class="scw-guides-icon" aria-hidden="true">↗</span><span>Crypto Tracing &amp; Recovery<small>Explore 150 practical guides</small></span>';
+ document.body.appendChild(link);
+}
