@@ -10,7 +10,9 @@ button.title='Search public blockchain data without leaving Solace Cyber';
 button.innerHTML='<span class="scw-chain-mark" aria-hidden="true">✦</span><span>Chain Search</span>';
 const existingOpen=document.getElementById('scw-explorer-open');
 if(existingOpen){
- button.addEventListener('click',()=>existingOpen.click());
+ // This page already has its own Chain Search button in the navigation.
+ // Do not add a duplicate floating launcher at the bottom-right.
+ return;
 }else{
  button.addEventListener('click',()=>{window.location.href='/index.html#scw-chain-explorer'});
 }
