@@ -417,6 +417,7 @@ async function searchMarkets(signal){const data=await get('https://gamma-api.pol
 form.addEventListener('submit',async e=>{e.preventDefault();if(controller)controller.abort();controller=new AbortController();const signal=controller.signal;const type=kind.value,q=query.value.trim();if(type!=='markets'&&!q)return;submit.disabled=true;submit.textContent='Searching…';reset('Searching public data','Connecting to a public read-only data provider. This can take a few seconds.');try{if(type==='markets')await searchMarkets(signal);else if(chain.value==='bitcoin')await searchBitcoin(type,q,signal);else await searchEthereum(type,q,signal)}catch(err){if(err.name!=='AbortError'){reset('Search unavailable',err.message||'The public provider could not be reached. Try again later or check the identifier.');results.lastChild&&results.lastChild.classList.add('scw-explorer-error');const note=node('p','No wallet credentials are needed. Your search has not signed or sent any transaction.','scw-explorer-muted');results.append(note)}}finally{if(!signal.aborted){submit.disabled=false;submit.textContent=kind.value==='markets'?'Load prediction markets →':'Search public data →'}}});
 document.getElementById('scw-explorer-clear').addEventListener('click',()=>{query.value='';reset('Ready to search','Choose a search type and enter a public identifier.');query.focus()});
 updateFields();
+if(location.hash==='#scw-chain-explorer')show();
 })();
 </script>
 <script id="scw-nav-hover-shake-all-pages">
