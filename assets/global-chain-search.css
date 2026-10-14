@@ -1,0 +1,17 @@
+/* Shared Chain Search launcher: available from every published page. */
+.scw-global-chain-search{
+  position:fixed;right:max(20px,env(safe-area-inset-right));
+  bottom:max(88px,calc(env(safe-area-inset-bottom) + 82px));z-index:19;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:50px;padding:12px 17px;border:1px solid #b4ffd0;border-radius:999px;
+  background:linear-gradient(115deg,#d8ffe8,#83e9b0 45%,#e8fff1);color:#0b1711!important;
+  font:800 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none!important;
+  white-space:nowrap;box-shadow:0 5px 24px #06120b99,0 0 18px #6adca233;
+  animation:scw-global-chain-glow 2.8s ease-in-out infinite;
+}
+.scw-global-chain-search:hover{transform:translateY(-3px);filter:brightness(1.04)}
+.scw-global-chain-search:focus-visible{outline:3px solid #a8f0c6;outline-offset:4px}
+.scw-global-chain-search .scw-chain-mark{font-size:18px;line-height:1}
+@keyframes scw-global-chain-glow{0%,100%{box-shadow:0 5px 24px #06120b99,0 0 12px #6adca22e}50%{box-shadow:0 5px 28px #06120bcc,0 0 24px #6adca266}}
+@media(max-width:560px){.scw-global-chain-search{right:15px;bottom:max(84px,calc(env(safe-area-inset-bottom) + 78px));min-height:46px;padding:11px 14px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.scw-global-chain-search{animation:none;transition:none}}
