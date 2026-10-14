@@ -26,7 +26,7 @@ if(!document.querySelector('.scw-floating-guides-link')){
  .scw-floating-guides-link:hover{transform:translate(-50%,-3px);border-color:#a8f0c6}
  .scw-floating-guides-link .scw-guides-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:#a8f0c6;color:#102017;font-size:18px}
  .scw-floating-guides-link small{display:block;margin-top:3px;color:#b8cfc0;font-size:11px;font-weight:400}
- @media(max-width:600px){.scw-floating-guides-link{left:50%;bottom:12px;max-width:calc(100vw - 24px);padding:10px 14px;font-size:12px}}
+ @media(max-width:600px){.scw-floating-guides-link{left:50%;bottom:12px;max-width:calc(100vw - 36px);gap:7px;padding:7px 10px;font-size:10px;border-radius:10px}.scw-floating-guides-link .scw-guides-icon{flex-basis:26px;width:26px;height:26px;border-radius:8px;font-size:14px}.scw-floating-guides-link small{font-size:9px;margin-top:2px}}
  @media(prefers-reduced-motion:reduce){.scw-floating-guides-link{transition:none}}
  `;
  document.head.appendChild(guideStyle);
