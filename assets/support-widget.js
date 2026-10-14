@@ -1,3 +1,5 @@
+/* Ensure Chain Search is available even on pages that do not render the support chat. */
+(()=>{'use strict';if(document.querySelector('script[data-scw-global-chain-search]'))return;const s=document.createElement('script');s.src='/assets/global-chain-search.js';s.defer=true;s.dataset.scwGlobalChainSearch='true';document.head.appendChild(s)})();
 (()=>{'use strict';
 const toggle=document.getElementById('support-chat-toggle');if(!toggle)return;
 toggle.hidden=false;
