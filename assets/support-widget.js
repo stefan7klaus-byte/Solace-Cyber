@@ -24,7 +24,34 @@ function replyFor(raw){
  if(has(/\b(thank|thanks)\b/))return 'You’re welcome. If you need more specific guidance, ask about a service or contact the team at Solace.cyber.workstations@mail.com.';
  return 'I can answer common questions about cybersecurity assessments, digital forensics and incident response, threat modeling, lawful digital-asset access assessments, pricing requests, privacy, and contacting the team. For a question outside these topics, email Solace.cyber.workstations@mail.com or use Request an assessment. This is a local FAQ assistant, not a generative AI chatbot.';
 }
-toggle.addEventListener('click',()=>panel.hidden?open():close());
+
+// scw-auto-welcome-v1: welcome new visitors once per browser tab and offer help after two minutes.
+let scwChatInteracted=false;
+let scwWelcomeTimer=null;
+function scwAutoWelcome(){
+ let alreadyWelcomed=false;
+ try{alreadyWelcomed=sessionStorage.getItem('scw-auto-welcome-v1')==='1';}catch(_){}
+ if(!alreadyWelcomed){
+   try{sessionStorage.setItem('scw-auto-welcome-v1','1');}catch(_){}
+   add('Welcome to Solace Cyber Workstations! 👋 I’m here if you need help exploring our services, security assessments, or digital-asset access support. How can we help you today?','bot');
+   panel.hidden=false;
+   toggle.setAttribute('aria-expanded','true');
+   scwWelcomeTimer=window.setTimeout(()=>{
+     if(!scwChatInteracted&&!panel.hidden){
+       add('Would you like any assistance finding the right service or understanding your next step? I’m happy to help.','bot');
+     }else if(!scwChatInteracted&&panel.hidden){
+       toggle.classList.add('support-chat-nudge');
+       toggle.setAttribute('aria-label','Need assistance? Open Solace Cyber help chat');
+       const nudge=document.createElement('span');nudge.className='support-chat-nudge-label';nudge.textContent='Need any assistance?';toggle.appendChild(nudge);
+       add('Would you like any assistance finding the right service or understanding your next step? Open the chat whenever you’re ready.','bot');
+     }
+   },120000);
+ }
+}
+toggle.addEventListener('click',()=>{scwChatInteracted=true;if(scwWelcomeTimer)clearTimeout(scwWelcomeTimer);const n=toggle.querySelector('.support-chat-nudge-label');if(n)n.remove();toggle.classList.remove('support-chat-nudge');panel.hidden?open():close()});
+input.addEventListener('focus',()=>{scwChatInteracted=true;if(scwWelcomeTimer)clearTimeout(scwWelcomeTimer)});
+scwAutoWelcome();
+
 panel.querySelector('.support-chat-head button').addEventListener('click',close);
 form.addEventListener('submit',e=>{e.preventDefault();const message=input.value.trim();if(!message||busy)return;busy=true;input.value='';input.disabled=true;add(message,'user');window.setTimeout(()=>{add(replyFor(message),'bot');busy=false;input.disabled=false;input.focus()},180)});
 })();
