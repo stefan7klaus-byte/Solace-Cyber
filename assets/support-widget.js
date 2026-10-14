@@ -53,5 +53,25 @@ input.addEventListener('focus',()=>{scwChatInteracted=true;if(scwWelcomeTimer)cl
 scwAutoWelcome();
 
 panel.querySelector('.support-chat-head button').addEventListener('click',close);
-form.addEventListener('submit',e=>{e.preventDefault();const message=input.value.trim();if(!message||busy)return;busy=true;input.value='';input.disabled=true;add(message,'user');window.setTimeout(()=>{add(replyFor(message),'bot');busy=false;input.disabled=false;input.focus()},180)});
+async function scwSendChatNotification(eventType,message,reply,sessionId){
+ try{
+   await fetch('/.netlify/functions/chat-notification',{
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({eventType,message,reply,sessionId,page:location.pathname,occurredAt:new Date().toISOString()})
+   });
+ }catch(_){/* Chat remains usable if email notifications are temporarily unavailable. */}
+}
+let scwSessionId='';
+try{scwSessionId=sessionStorage.getItem('scw-chat-session-id')||'';if(!scwSessionId){scwSessionId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'scw-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);sessionStorage.setItem('scw-chat-session-id',scwSessionId)}}catch(_){scwSessionId='scw-'+Date.now().toString(36)}
+form.addEventListener('submit',e=>{
+ e.preventDefault();const message=input.value.trim();if(!message||busy)return;
+ busy=true;input.value='';input.disabled=true;add(message,'user');
+ void scwSendChatNotification('visitor_message',message,'',scwSessionId);
+ window.setTimeout(()=>{
+   const reply=replyFor(message);add(reply,'bot');
+   void scwSendChatNotification('chatbot_reply',message,reply,scwSessionId);
+   busy=false;input.disabled=false;input.focus();
+ },180);
+});
 })();
